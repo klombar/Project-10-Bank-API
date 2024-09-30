@@ -1,0 +1,12 @@
+.Header-nav{
+   display: flex;
+   align-items: center;
+   gap: 5px;
+   font-weight: bold;
+   margin-right: 0.5rem;
+}
+
+.Header-nav p:hover{
+   cursor: pointer;
+   text-decoration: underline;
+}
