@@ -1,4 +1,4 @@
-.Header-nav{
+.header-nav{
    display: flex;
    align-items: center;
    gap: 5px;
@@ -6,7 +6,7 @@
    margin-right: 0.5rem;
 }
 
-.Header-nav p:hover{
+.header-nav p:hover{
    cursor: pointer;
    text-decoration: underline;
 }

@@ -2,9 +2,11 @@
    display: flex;
    justify-content: space-between;
    align-items: center;
-   padding: 3px 20px;
+   padding: 5px 20px;
 }
 
-
+.header-logo{
+   height: 54.38px
+}
 
 

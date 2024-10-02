@@ -3,7 +3,7 @@ import './Logo.css';
 
 function Logo({ logo }) {
   return (
-    <div className="Header-logo">
+    <div className="header-logo">
       <img src={logo} alt="Argent Bank Logo" />
     </div>
   );
