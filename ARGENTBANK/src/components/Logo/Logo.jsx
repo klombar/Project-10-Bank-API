@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
+import { Link } from "react-router-dom";
 import './Logo.css';
 
 function Logo({ logo }) {
   return (
-    <div className="header-logo">
+    <Link to="/" className="header-logo">
       <img src={logo} alt="Argent Bank Logo" />
-    </div>
+    </Link>
   );
 }
 
