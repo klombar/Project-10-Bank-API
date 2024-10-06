@@ -13,6 +13,7 @@
 input{
    padding: 5px;
    font-size: 1.2rem;
+   border: 1px solid black;
 }
 
 .modale i {
@@ -25,12 +26,12 @@ input{
    font-size: 1.5em;
 }
 
-.signIn-Modale-Username-Wrapper label,
+.signIn-Modale-Email-Wrapper label,
 .signIn-Modale-Password-wrapper label{
    font-weight: bold;
 }
 
-.signIn-Modale-Username-Wrapper,
+.signIn-Modale-Email-Wrapper,
 .signIn-Modale-Password-wrapper{
    display: flex;
    justify-content: center;

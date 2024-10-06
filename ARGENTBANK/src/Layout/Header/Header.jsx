@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import Logo from '../../components/Logo/Logo.jsx';
-import logoImage from '../../assets/img/argentBankLogo.png';
+import logoImage from '../../assets/img/argentBankLogo-compressed.webp';
 import "./Header.css"
 import Nav from '../../components/Nav/Nav.jsx';
 

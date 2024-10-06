@@ -1,20 +1,37 @@
+import { useEffect, useState } from "react";
 import Main from "../../Layout/Main/Main";
 import Banner from '../../components/Banner/Banner';
 import Features from '../../components/Features/Features';
-import bannerImage from '../../assets/img/bank-tree.jpeg';
-import chat from "../../assets/img/icon-chat.png"
-import money from "../../assets/img/icon-money.png"
-import security from "../../assets/img/icon-security.png" 
-import "./Home.css"
+import bannerImage from '../../assets/img/bank-tree-compressed.webp';
+import "./Home.css";
+import { v4 as uuidv4 } from 'uuid';
 
 function Home() {
+  const [featuresData, setFeaturesData] = useState([]);
+
+  useEffect(() => {
+    fetch("/features.json")
+      .then((response) => response.json())
+      .then((data) => {
+        setFeaturesData(data); 
+      })
+      .catch((error) => {
+        console.error("Error loading features data:", error);
+      });
+  }, []);
+
   return (
     <Main>
       <Banner image={bannerImage} />
       <div className="section-features">
-        <Features icon={chat} title="You are our #1 priority" text="Need to talk to a representative? You can get in touch through our 24/7 chat or through a phone call in less than 5 minutes." />
-        <Features icon={money} title="More savings means higher rates" text="The more you save with us, the higher your interest rate will be!" />
-        <Features icon={security} title="Security you can trust" text="We use top of the line encryption to make sure your data and money is always safe." />
+        {featuresData.map((feature) => (
+          <Features 
+            key={uuidv4()}
+            icon={feature.icon}
+            title={feature.title}
+            text={feature.text}
+          />
+        ))}
       </div>
     </Main>
   );
