@@ -1,8 +1,7 @@
-// src/redux/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Action asynchrone pour la connexion
-export const login = createAsyncThunk('auth/login', async (Auth, thunkAPI) => {
+export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
     const response = await fetch('http://localhost:3001/api/v1/user/login', {
       method: 'POST',
@@ -10,8 +9,8 @@ export const login = createAsyncThunk('auth/login', async (Auth, thunkAPI) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: Auth.email, 
-        password: Auth.password,
+        email: credentials.email,
+        password: credentials.password,
       }),
     });
 
@@ -20,9 +19,41 @@ export const login = createAsyncThunk('auth/login', async (Auth, thunkAPI) => {
     }
 
     const data = await response.json();
-    console.log('API Response:', data);
-    return data.body;
+    console.log('API Response (login):', data);
+    return data.body;  // L'objet body contenant le token et d'autres informations.
   } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+// Action asynchrone pour récupérer le profil utilisateur
+export const fetchUserProfile = createAsyncThunk('auth/fetchUserProfile', async (_, thunkAPI) => {
+  const state = thunkAPI.getState();
+  const token = state.auth.token;
+
+  if (!token) {
+    console.error('No token found');
+    return thunkAPI.rejectWithValue('No token found');
+  }
+
+  try {
+    const response = await fetch('http://localhost:3001/api/v1/user/profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user profile');
+    }
+
+    const data = await response.json();
+    console.log('Profile API Response:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
     return thunkAPI.rejectWithValue(error.message);
   }
 });
@@ -30,29 +61,43 @@ export const login = createAsyncThunk('auth/login', async (Auth, thunkAPI) => {
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
-    token: null,
-    status: 'idle',
-    error: null,
+    user: null,       // Données utilisateur
+    token: null,      // Token de connexion
+    status: 'idle',   // Statut des requêtes
+    error: null,      // Erreurs éventuelles
   },
   reducers: {
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.status = 'idle';
     },
   },
   extraReducers: (builder) => {
     builder
+      // Gestion de la connexion
       .addCase(login.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.user = action.payload.user;
         state.token = action.payload.token;
-        console.log('Redux State:', state);
+        console.log('Token après connexion:', action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      // Gestion de la récupération du profil utilisateur
+      .addCase(fetchUserProfile.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.user = action.payload;
+        console.log('Profil utilisateur récupéré:', action.payload);
+      })
+      .addCase(fetchUserProfile.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
