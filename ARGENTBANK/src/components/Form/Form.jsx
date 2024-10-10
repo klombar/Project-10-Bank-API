@@ -39,8 +39,9 @@ function Form() {
     if (authStatus === 'succeeded' && user) {
       // Redirection vers le dashboard après récupération du profil utilisateur
       navigate('/dashboard');
+      dispatch(fetchUserProfile());
     }
-  }, [authStatus, user, navigate]);
+  }, [authStatus, user, navigate, dispatch]);
 
   return (
     <form onSubmit={handleSubmit}>
